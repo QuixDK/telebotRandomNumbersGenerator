@@ -3,15 +3,18 @@ import random
 
 bot = telebot.TeleBot('YOUR-TOKEN-HERE')
 
+
 @bot.message_handler(commands=['start'])
 def generate_message(message):
     admins = bot.get_chat_administrators(message.chat.id)
     admin_ids = [admin.user.id for admin in admins]
     if message.from_user.id in admin_ids:
-        bot.send_message(message.chat.id, 'Генератор случайных чисел приветствует вас! \nВведите числовой диапазон, количество чисел и нужно ли генерировать повторяющиеся числа в формате: "от до количество да/нет", например: "1 100 10 да".')
+        bot.send_message(message.chat.id,
+                         'Генератор случайных чисел приветствует вас! \nВведите числовой диапазон, количество чисел и нужно ли генерировать повторяющиеся числа в формате: "от до количество да/нет", например: "1 100 10 да".')
         bot.register_next_step_handler(message, generate_numbers)
     else:
         bot.register_next_step_handler(message, generate_numbers)
+
 
 def generate_numbers(message):
     try:
@@ -35,5 +38,6 @@ def generate_numbers(message):
     except:
         bot.send_message(message.chat.id, 'Ошибка! Неверно введены данные, попробуйте еще раз" Пример: "1 100 10 да".')
         bot.register_next_step_handler(message, generate_numbers)
+
 
 bot.polling(none_stop=True)
